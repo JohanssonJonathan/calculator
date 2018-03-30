@@ -46,11 +46,72 @@ border-collapse: collapse;
     </style>
     <script type="text/javascript">
 
+    /*arr.push(Number(this.val));*/
+
+
+
+
+/*
+      if(operator === "+" && bool){
+
+        //lagrar förra värdet i prevVal när jag trycker på en operator
+        if(helaValue === ""){
+          prevVal = this.val;
+          this.history = this.val + ""
+
+        }else {
+          this.history = Number(helaValue) +  Number(this.val) + ""
+          prevVal = Number(helaValue) +  Number(this.val)
+          helaValue = ""
+
+        }
+        bool = false;
+
+      }else if(operator ==="+") {
+
+        helaValue = Number(prevVal) + Number(this.val)
+
+        prevVal = helaValue;
+        this.history = helaValue + ""
+
+
+        bool = true;
+
+
+      }
+
+
+
+        this.val = ""
+        */
+
+
+
+
+
+
+    /*arr.push(operator);
+    if(arr.length === 4){
+
+      helaValue = arr[0] + arr[2]
+      this.history += " " + helaValue
+      bool = true;
+      this.val =  helaValue
+      arr = []
+
+
+    }
+    if(helaValue !== ""){
+
+      prevVal = helaValue
+    }
+                      console.log(arr)
+    console.log(prevVal)*/
+
 
     window.addEventListener("load", function(){
-
-
-      let lastVal = 0;
+        let bool = true;
+        let talet = ""
       let arr = []
       let vue = new Vue({
 
@@ -70,12 +131,9 @@ border-collapse: collapse;
 
               number:function(nr){
 
-                if(nr ===0 && this.val === ""){
 
+                this.val += nr
 
-                }else{
-                    this.val += nr
-                }
 
               },
               clear :function(){
@@ -85,107 +143,126 @@ border-collapse: collapse;
 
               calc: function(operator){
 
-                this.currentOp = operator;
+                    console.log(arr)
+                    this.placeNum += operator
 
-                if(this.val !== ""){
+                    if(talet === ""){
 
-                    if(this.history === ""){
-                      this.history = this.val + " " + operator;
-                      arr.push(this.val)
+                      console.log(arr)
 
+                      arr.push(Number(this.val))
                       arr.push(operator)
-
                     }else{
-                      this.history += this.val +" "+ operator
-                      arr.push(this.val)
-
-                      arr.push(operator)
+                      arr.push(Number(this.val))
 
                     }
-                    this.val = ""
 
 
-                }
+                      this.history+= this.val
+
+                      for(let i=0; i<arr.length; i++){
 
 
-                if(operator === "="){
-
-
-                        this.history =""
-
-                        for(let i=0; i<arr.length;i++){
-
-                          if(arr[i] !== "+" && arr[i] !== "=" && arr[i] !== "-"){
-
-                            arr[i] = Number(arr[i])
-                          }
-                        }
-
-                        let minusOrPlus = "+"
-                        for(let i=0; i< arr.length; i++){
-
-                          if(arr[i] !== "+" && arr[i] !== "=" && arr[i] !== "-"){
+                          console.log(arr[arr.length-1])
 
 
 
-                            if(arr[i+1] ==="+" || arr[i+1] === "="){
+                          if(typeof arr[0]=== "number"){
 
-                              console.log(arr[i+1])
+                            if( arr[1] === "+"){
+
+                                if(typeof arr[2] === "number"){
+
+                                    console.log(arr)
+                                  let string1 = arr[0].toString();
+                                  let string2 = arr[2].toString();
+                                  let tot = arr[0] + arr[2]
+                                  this.history = string1 +"+"+ string2 + "=" +" " + tot ;
+                                  this.placeNum = tot + " " + operator
+
+
+                                    talet = arr[0] + arr[2];
 
 
 
-                              this.value = this.value + arr[i];
+                                  arr = []
+                                  arr.push(talet)
+                                  arr.push(operator)
+                                  bool = false;
 
-                            }else if(arr[i+1] === "-" ){
 
-                              console.log("hej")
+                                }
 
-                              if(arr[i]>arr[i+2]){
-                                this.value = this.value - arr[i];
+                            }else if( arr[1]=== "-"){
 
-                                minusOrPlus = "+"
-                              }else{
-                                this.value = this.value - arr[i];
+                              if(typeof arr[2] === "number"){
 
-                                minusOrPlus = "-"
+                                let string1 = arr[0].toString();
+                                let string2 = arr[2].toString();
+                                let tot = arr[0] - arr[2]
+
+                                this.history =  string1 +"-"+ string2 + "=" +" " + tot ;
+                                this.placeNum = tot + " " +operator
+                                talet = arr[0] - arr[2];
+                                arr = []
+
+                                arr.push(talet)
+                                arr.push(operator)
+
+                              }
+                            }else if(arr[1] === "x"){
+                              if(typeof arr[2] === "number"){
+
+                                let string1 = arr[0].toString();
+                                let string2 = arr[2].toString();
+                                let tot = arr[0] * arr[2]
+
+                                this.history =  string1 +"*"+ string2 + "=" +" " + tot ;
+                                this.placeNum = tot + " " +operator
+                                talet = arr[0] * arr[2];
+                                arr = []
+
+                                arr.push(talet)
+                                arr.push(operator)
+
                               }
 
+                            }else if(arr[1] === "/"){
+                              if(typeof arr[2] === "number"){
+
+                                let string1 = arr[0].toString();
+                                let string2 = arr[2].toString();
+                                let tot = arr[0] / arr[2]
+
+                                this.history =  string1 +"/"+ string2 + "=" +" " + tot ;
+                                this.placeNum = tot + " " +operator
+                                talet = arr[0] / arr[2];
+                                arr = []
+
+                                arr.push(talet)
+                                arr.push(operator)
+
+                              }
 
                             }
 
-
-                            console.log(arr)
                           }
 
-
-
-                        }
-
-                          if(minusOrPlus === "+"){
-                            console.log(this.value)
-                              this.value = this.value * -1
-
-                          }else if(minusOrPlus === "-"){
-                            this.value = "-" + this.value
-                          }
-
-                          this.val = this.value
-
-                          this.value = 0
-                          arr = []
-
-                }
+                      }
+                      this.val = ""
 
 
               }
+
 
           }
 
       })
 
-
-
     })
+
+
+
 
     </script>
   </head>
