@@ -16,6 +16,7 @@ border-collapse: collapse;
       box-sizing: border-box;
       text-align: center;
       border:2px solid;
+      background: red;
 
     }
 
@@ -110,7 +111,10 @@ border-collapse: collapse;
 
 
     window.addEventListener("load", function(){
-        let bool = true;
+      let svar = true;
+      let res = []
+      let x2 = false;
+      let bool = true;
         let talet = ""
       let arr = []
       let vue = new Vue({
@@ -123,77 +127,145 @@ border-collapse: collapse;
             history: "",
             placeNum: "",
             value: 0,
-            currentOp : "",
-            bool: true,
-
+            result: "",
+            svar: "",
+            ekvation: ""
           },
           methods:{
 
               number:function(nr){
 
 
-                this.val += nr
-
+                  this.val += nr
+                  this.history += nr
 
               },
               clear :function(){
                 this.val = ""
-
+                this.history = "";
+                arr = []
+                talet = ""
+                this.placeNum = ""
               },
 
               calc: function(operator){
 
-                    console.log(arr)
-                    this.placeNum += operator
-
+                    /*this.placeNum += operator*/
                     if(talet === ""){
 
-                      console.log(arr)
+                      if(this.val === ""){
 
-                      arr.push(Number(this.val))
-                      arr.push(operator)
+                        if(operator !== "="){
+                          arr.push(operator)
+
+                        }
+                        console.log("lol")
+                        console.log(arr)
+
+                      }else{
+
+                        arr.push(Number(this.val))
+                        arr.push(operator)
+
+                      }
+
+
                     }else{
-                      arr.push(Number(this.val))
+
+                      if(this.val !== ""){
+
+                        arr.push(Number(this.val))
+                        arr.push(operator)
+
+                      }else{
+                        console.log(operator)
+                        if(operator !== "="){
+
+
+                            arr.push(operator)
+
+
+                        }else if(arr[1]=== "x2"){
+                          console.log(arr)
+                          this.svar += arr[0] + ", "
+                          this.history = ""
+                          arr =[]
+                        }
+
+                      }
 
                     }
 
 
-                      this.history+= this.val
 
                       for(let i=0; i<arr.length; i++){
 
 
-                          console.log(arr[arr.length-1])
+                          console.log(arr)
+
+                          if(arr[1]=== "="){
+                            if(svar){
+                              res.push(arr[0])
+                              this.svar += arr[0] +", "
+                              console.log(arr)
+                              arr = []
+                              svar = false;
+                            }
+
+                          }
+                        if(typeof arr[2] === "string"){
+                          console.log(arr)
+
+                          arr[1] = arr[2]
+                          arr.pop()
+                        }
 
 
+                        this.history = ""
+                          for(let x=0; x< arr.length;x++){
+                            this.history += arr[x]
+                            this.placeNum = arr[x]
 
-                          if(typeof arr[0]=== "number"){
+                          }
+
+                          if(typeof arr[0]=== "number" && arr[0] !== 0){
 
                             if( arr[1] === "+"){
 
                                 if(typeof arr[2] === "number"){
 
-                                    console.log(arr)
-                                  let string1 = arr[0].toString();
-                                  let string2 = arr[2].toString();
-                                  let tot = arr[0] + arr[2]
-                                  this.history = string1 +"+"+ string2 + "=" +" " + tot ;
-                                  this.placeNum = tot + " " + operator
+                                    let string1 = arr[0].toString();
+                                    let string2 = arr[2].toString();
+                                    let tot = arr[0] + arr[2]
 
+                                    if(arr[3] === "="){
 
-                                    talet = arr[0] + arr[2];
+                                      console.log("ja")
+                                      arr = []
+                                      this.result = string1 +"+"+ string2 + "=" +" " + tot ;
+                                      this.ekvation +=  string1 +"+"+ string2 + "=" +" " + tot + ","
+                                      this.history = ""
+                                      this.placeNum = tot
+                                      this.svar += tot + ", "
+                                      res.push(tot)
+                                      console.log(arr)
 
+                                      console.log(res)
+                                    }else {
+                                      this.result = string1 +"+"+ string2 + "=" +" " + tot ;
+                                      this.ekvation +=  string1 +"+"+ string2 + "=" +" " + tot + ", "
 
-
-                                  arr = []
-                                  arr.push(talet)
-                                  arr.push(operator)
-                                  bool = false;
-
-
+                                      this.history =" "
+                                      this.placeNum = tot + " " + operator
+                                        talet = arr[0] + arr[2];
+                                        arr = []
+                                        arr.push(talet)
+                                        arr.push(operator)
+                                    }
                                 }
 
                             }else if( arr[1]=== "-"){
+                              console.log(arr)
 
                               if(typeof arr[2] === "number"){
 
@@ -201,13 +273,27 @@ border-collapse: collapse;
                                 let string2 = arr[2].toString();
                                 let tot = arr[0] - arr[2]
 
-                                this.history =  string1 +"-"+ string2 + "=" +" " + tot ;
-                                this.placeNum = tot + " " +operator
-                                talet = arr[0] - arr[2];
-                                arr = []
+                                  if(arr[3] === "="){
+                                    arr = []
+                                    this.result =  string1 +"-"+ string2 + "=" +" " + tot ;
+                                    this.ekvation += string1 +"-"+ string2 + "=" +" " + tot +", ";
+                                    this.history =  ""
+                                    this.svar += tot + ", "
 
-                                arr.push(talet)
-                                arr.push(operator)
+                                    this.placeNum = tot
+
+                                  }else{
+                                    this.result =  string1 +"-"+ string2 + "=" +" " + tot ;
+                                    this.ekvation += string1 +"-"+ string2 + "=" +" " + tot + ", " ;
+
+                                    this.history = ""
+                                    this.placeNum = tot + " " +operator
+                                    talet = arr[0] - arr[2];
+                                    arr = []
+
+                                    arr.push(talet)
+                                    arr.push(operator)
+                                  }
 
                               }
                             }else if(arr[1] === "x"){
@@ -217,16 +303,29 @@ border-collapse: collapse;
                                 let string2 = arr[2].toString();
                                 let tot = arr[0] * arr[2]
 
-                                this.history =  string1 +"*"+ string2 + "=" +" " + tot ;
-                                this.placeNum = tot + " " +operator
-                                talet = arr[0] * arr[2];
-                                arr = []
+                                if(arr[3] === "="){
+                                  arr = []
+                                  this.result = string1 +"*"+ string2 + "=" +" " + tot ;
+                                  this.ekvation += string1 +"*"+ string2 + "=" +" " + tot + ", ";
 
-                                arr.push(talet)
-                                arr.push(operator)
+                                  this.history =  "";
+                                  this.svar += tot + ", "
 
+                                  this.placeNum = tot
+                                }else{
+                                  console.log("här")
+                                  this.result = string1 +"*"+ string2 + "=" +" " + tot ;
+                                  this.ekvation += string1 +"*"+ string2 + "=" +" " + tot + ", ";
+
+                                  this.history =  "";
+                                  this.placeNum = tot + " " +operator
+                                  talet = arr[0] * arr[2];
+                                  arr = []
+
+                                  arr.push(talet)
+                                  arr.push(operator)
+                                }
                               }
-
                             }else if(arr[1] === "/"){
                               if(typeof arr[2] === "number"){
 
@@ -234,23 +333,91 @@ border-collapse: collapse;
                                 let string2 = arr[2].toString();
                                 let tot = arr[0] / arr[2]
 
-                                this.history =  string1 +"/"+ string2 + "=" +" " + tot ;
-                                this.placeNum = tot + " " +operator
-                                talet = arr[0] / arr[2];
-                                arr = []
+                                if(arr[3] === "="){
+                                  arr = []
+                                  this.result = string1 +"/"+ string2 + "=" +" " + tot ;
+                                  this.ekvation += string1 +"/"+ string2 + "=" +" " + tot + ", ";
 
-                                arr.push(talet)
-                                arr.push(operator)
+                                  this.history =  "";
+                                  this.svar += tot + ", "
 
+                                  this.placeNum = tot
+                                }else{
+
+                                  this.result = string1 +"/"+ string2 + "=" +" " + tot ;
+                                  this.ekvation += string1 +"/"+ string2 + "=" +" " + tot + ", ";
+
+                                  this.history =  "";
+                                  this.placeNum = tot + " " +operator
+                                  talet = arr[0] / arr[2];
+                                  arr = []
+
+                                  arr.push(talet)
+                                  arr.push(operator)
+                                }
                               }
+
+                            }else if(arr[1] === "="){
+
+
+
+                            }else if(arr[1] === "x2"){
+
+
+
+                              let tot = arr[0] * arr[0];
+                              talet = arr[0] * arr[0];
+                                if(arr[2]=== "="){
+
+                                  console.log(arr)
+                                  this.result =  arr[0].toString() + "^2 = " + (arr[0] * arr[0])
+                                  this.history = tot
+                                  this.ekvation +=  arr[0].toString() + "^2 = " + (arr[0] * arr[0]) + ", "
+                                  this.svar += tot + ", "
+
+                                }else{
+                                  this.result =  arr[0].toString() + "^2 = " + (arr[0] * arr[0])
+                                  this.history = tot;
+                                  this.ekvation +=  arr[0].toString() + "^2 = " + (arr[0] * arr[0]) + ", "
+                                }
+
+
+                              arr =[]
+
+                                this.val = talet
+
+
+                                x2= true;
+
+
+
+                            }else if(arr[1] === "√"){
+
+                              this.history = Math.sqrt(arr[0])
+                              this.placeNum = Math.sqrt(arr[0])
+                              talet = Math.sqrt(arr[0])
+
+                              arr = []
 
                             }
 
+                          }else if( arr[0] === "="){
+                            console.log("la")
+                            this.history = ""
                           }
 
                       }
-                      this.val = ""
 
+                      if(x2){
+                        arr.push(talet)
+                        arr.push(operator)
+                        x2= false
+                      }
+
+                      svar = true
+
+                      this.val = ""
+                      console.log(res)
 
               }
 
@@ -286,11 +453,19 @@ varje gång man klickar på = ska det uträknade resultatet sparas i en lista, s
     <div id="vue">
 
       <div class="content">
+        <div class="svar">
+
+          <span>Results</span>  {{svar}}
+        </div>
+
+        <div class="resultat">
+          <span>Latest ekvation</span>  {{result}}
+        </div>
         <div class="historik">
 
             {{history}}
         </div>
-        <input type="text" name="" v-bind:placeholder="placeNum" v-bind:value="val" >
+        <input type="text" name="" v-bind:placeholder="placeNum"  v-model:value="val" >
 
         <table>
           <tr>
@@ -325,6 +500,10 @@ varje gång man klickar på = ska det uträknade resultatet sparas i en lista, s
             <td colspan="2" v-on:click="calc('=')" >=</td>
           </tr>
         </table>
+      </div>
+      <div class="count">
+        <h2>History of your ekvations</h2>
+        {{ekvation}}
       </div>
 
     </div>
