@@ -7,17 +7,32 @@
 
     <style media="screen">
 
+    body{
+      height: 100vh;
+      background: -moz-radial-gradient(center, ellipse cover, rgba(76,29,36,0.54) 0%, rgba(76,29,36,0.67) 22%, rgba(76,29,36,0.69) 26%, rgba(76,29,36,1) 100%);
+background: -webkit-radial-gradient(center, ellipse cover, rgba(76,29,36,0.54) 0%,rgba(76,29,36,0.67) 22%,rgba(76,29,36,0.69) 26%,rgba(76,29,36,1) 100%);
+background: radial-gradient(ellipse at center, rgba(76,29,36,0.54) 0%,rgba(76,29,36,0.67) 22%,rgba(76,29,36,0.69) 26%,rgba(76,29,36,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8a4c1d24', endColorstr='#4c1d24',GradientType=1 );
+  font-family: arial;
+  color:rgba(255,255,255,0.7)
+    }
     table {
-      background: white;
+      color:rgba(255,255,255,0.7);
+      background:#333644;
+
 border-collapse: collapse;
     }
     td {
       padding:20px;
       box-sizing: border-box;
       text-align: center;
-      border:2px solid;
-      background: red;
 
+    }
+
+    .col{
+      color:rgba(0,0,0,0.5);
+      display: inline-block;
+      padding-top:10px;
     }
 
     #vue{
@@ -32,15 +47,36 @@ border-collapse: collapse;
 
       .historik{
         width:inherit;
-        padding:20px;
-        background: rgba(0,0,0,0.6);
+        padding:10px;
+        background: rgba(0,0,0,0.3);
         text-align:right;
+        margin-top: 50px;
+        border-bottom: 3px solid rgba(255,255,255,0.8)
       }
       input{
         width: 100%;
-        padding: 10px;
+        padding:10px;
         text-align: right;
         box-sizing:border-box;
+        border:none;
+        border-bottom:3px solid rgba(255,255,255,0.8);
+        margin-bottom: 3px;
+        background: rgba(255,255,255,0)
+      }
+
+      .svar{
+        text-align: center;
+        display: block;
+        width:100%;
+        color:rgba(255,255,255,0.5);
+        margin-bottom:20px;
+      }
+      .resultat{
+        color:rgba(255,255,255,0.5);
+
+        display: block;
+        text-align: center;
+        width:100%;
 
       }
 
@@ -451,16 +487,17 @@ appen håller en historik över tidigare uträkningar
 varje gång man klickar på = ska det uträknade resultatet sparas i en lista, som också ska vara synlig för användaren-->
 
     <div id="vue">
+      <div class="svar">
 
+        <span>Results</span></br>  <span class="col">{{svar}}<span>
+      </div>
+      <div class="resultat">
+        <span>Latest ekvation</span> </br> <span class="col">{{result}}</span>
+      </div>
       <div class="content">
-        <div class="svar">
 
-          <span>Results</span>  {{svar}}
-        </div>
 
-        <div class="resultat">
-          <span>Latest ekvation</span>  {{result}}
-        </div>
+
         <div class="historik">
 
             {{history}}
