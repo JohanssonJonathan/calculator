@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+    <style media="screen">
+    body{
+      height: 100vh;
+      background: -moz-radial-gradient(center, ellipse cover, rgba(76,29,36,0.54) 0%, rgba(76,29,36,0.67) 22%, rgba(76,29,36,0.69) 26%, rgba(76,29,36,1) 100%);
+background: -webkit-radial-gradient(center, ellipse cover, rgba(76,29,36,0.54) 0%,rgba(76,29,36,0.67) 22%,rgba(76,29,36,0.69) 26%,rgba(76,29,36,1) 100%);
+background: radial-gradient(ellipse at center, rgba(76,29,36,0.54) 0%,rgba(76,29,36,0.67) 22%,rgba(76,29,36,0.69) 26%,rgba(76,29,36,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8a4c1d24', endColorstr='#4c1d24',GradientType=1 );
+  font-family: arial;
+  color:rgba(255,255,255,0.7)
+    }
+    table {
+      color:rgba(255,255,255,0.7);
+      background:#333644;
+border-collapse: collapse;
+    }
+    td {
+      padding:20px;
+      box-sizing: border-box;
+      text-align: center;
+      cursor: pointer;
+    }
+    .col{
+      color:rgba(0,0,0,0.5);
+      display: inline-block;
+      padding-top:10px;
+    }
+    #vue{
+      margin:auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      position: relative;
+      top:100px;
+      }
+      .historik{
+        width:inherit;
+        padding:10px;
+        background: rgba(0,0,0,0.3);
+        text-align:right;
+        margin-top: 50px;
+        border-bottom: 3px solid rgba(255,255,255,0.8)
+      }
+      input{
+        width: 100%;
+        padding:10px;
+        text-align: right;
+        box-sizing:border-box;
+        border:none;
+        border-bottom:3px solid rgba(255,255,255,0.8);
+        margin-bottom: 3px;
+        background: rgba(255,255,255,0)
+      }
+      .svar{
+        text-align: center;
+        display: block;
+        width:100%;
+        color:rgba(255,255,255,0.5);
+        margin-bottom:20px;
+      }
+      .resultat{
+        color:rgba(255,255,255,0.5);
+        display: block;
+        text-align: center;
+        width:100%;
+      }
+      .count{
+        width:50%;
+        text-align: center;
+        padding: 20px;
+      }
+    </style>
+    <script type="text/javascript">
+    /*this.arr.push(Number(this.val));*/
+/*
+      if(operator === "+" && this.bool){
+        //lagrar förra värdet i prevVal när jag trycker på en operator
+        if(helaValue === ""){
+          prevVal = this.val;
+          this.history = this.val + ""
+        }else {
+          this.history = Number(helaValue) +  Number(this.val) + ""
+          prevVal = Number(helaValue) +  Number(this.val)
+          helaValue = ""
+        }
+        this.bool = false;
+      }else if(operator ==="+") {
+        helaValue = Number(prevVal) + Number(this.val)
+        prevVal = helaValue;
+        this.history = helaValue + ""
+        this.bool = true;
+      }
+        this.val = ""
+        */
+    /*this.arr.push(operator);
+    if(this.arr.length === 4){
+      helaValue = this.arr[0] + this.arr[2]
+      this.history += " " + helaValue
+      this.bool = true;
+      this.val =  helaValue
+      this.arr = []
+    }
+    if(helaValue !== ""){
+      prevVal = helaValue
+    }
+    */
+    window.addEventListener("load", function(){
+      let vue = new Vue({
+          el : "#vue",
+          data:{
+            val: "0",
+            history: "0",
+            placeNum: "",
+            value: 0,
+            result: "",
+            svar: "",
+            ekvation: "",
+            lat : "",
+            arr : [],
+            boolx2 : true,
+            bool : true,
+            kommaBool: true,
+            talet: 0
+
+          },
+          methods:{
+              number:function(nr){
+                if(this.val === "" && nr ==="."){
+                  this.val = "0."
+                }else if(this.val === "0"){
+                    this.val = ""
+                    if(nr === "."){
+                      if(this.kommaBool){// this.kommaBool kollar så att man inte kan peppra på kommatecken.
+                        this.val = "0"+nr;
+                        this.kommaBool = false
+                      }
+                    }else if(nr === "0"){
+                      this.val = nr;
+                    }else{
+                      this.val += nr
+                    }
+                  }else{
+                    if(nr === "." ){
+                      if(this.val !== "0."){
+                        if(this.kommaBool){ // this.kommaBool kollar så att man inte kan peppra på kommatecken.
+                          this.val += nr
+                          this.kommaBool = false;
+                        }
+                      }
+                    }else{
+                      this.val += nr
+                    }
+                  }
+              },
+              clear :function(){
+                this.arr = []
+                this.val = "0";
+                this.history = ""
+              },
+              calc: function(operator){
+
+                  if(this.val !==""){
+                    this.arr.push(Number(this.val))
+                    this.arr.push(operator)
+                  }else{
+                      for(let x=0; x<this.arr.length; x++){
+                        if(this.arr[x]=== "^2"){
+                          this.bool = false;
+                        }else if(this.arr[x] === "√"){
+                          this.bool= false;
+                        }
+                      }
+                      if(this.bool){
+                        let tal = this.arr[0];
+                        this.arr = []
+                        this.arr.push(tal)
+                        this.arr.push(operator)
+                      }else{
+                          this.arr.push(operator)
+                          this.talet = this.arr[0] * this.arr[0]
+                          this.result = this.arr[0] +"^2 " + " = " + this.talet;
+                          this.ekvation += this.arr[0] + "^2" + " = " + this.talet + ", "
+                          this.arr =[]
+                          this.arr.push(this.talet)
+                          this.arr.push(operator)
+                          this.bool = true;
+                          this.boolx2 = false;
+                      }
+                  }
+                  for(let i=0; i<this.arr.length; i++){
+                      if(typeof this.arr[0] === "number"){
+                          if(this.arr[1]=== "="){
+                            console.log(this.arr[0])
+                            if(this.arr[0]!== 0){
+                              this.svar += this.arr[0] + ", "
+                              this.arr = []
+                              this.val = "0";
+                            }
+
+                          }else if(this.arr[1] === "+"){
+                              this.kommaBool = true;
+                            this.history = this.arr[0] + "+";
+                            this.val = ""
+                            if(this.arr[3]=== "="){
+                              let svaret = this.arr[0] + this.arr[2]
+                              this.svar += svaret + ", ";
+                              this.result = this.arr[0] + "+" + this.arr[2] + "= " + svaret;
+                              this.ekvation += this.arr[0] + "+" + this.arr[2] + "= " + svaret + ", "
+                              this.arr = []
+                              this.val = "0";
+                              this.history = ""
+                            }else if(this.arr[3]=== "^2"){
+                              let nu = this.arr[0];
+                              this.history = this.arr[0] + "^2"
+                              this.arr = []
+                              this.arr.push(nu)
+                              this.arr.push("^2")
+                            }else if(this.arr[3]=== "√"){
+                              let nu = this.arr[0];
+                              let rot =  Math.sqrt(this.arr[2]);
+                              console.log(this.arr)
+                              this.result = nu + " + " + rot + " = " + (nu + rot)
+
+                              this.arr = []
+                              this.history = nu + rot
+                              this.val= nu+rot
+
+
+                            }else if(this.arr[2] !== undefined && this.arr[3]!== "√"){
+                              console.log(this.arr)
+
+                              this.talet = this.arr[0] + this.arr[2]
+                              this.result = this.arr[0] + "+" + this.arr[2] + "= " + this.talet;
+                              this.ekvation += this.arr[0] + "+" + this.arr[2] + "= " + this.talet + ", "
+
+                              this.arr = []
+                              this.arr.push(this.talet)
+                              this.arr.push(operator)
+                            }
+                          }else if(this.arr[1] === "-"){
+
+                            this.kommaBool = true;
+                            this.history = this.arr[0] + "-";
+                            this.val = ""
+                            if(this.arr[3]=== "="){
+                              let svaret = this.arr[0] - this.arr[2]
+                              this.svar += svaret + ", "
+                              this.result = this.arr[0] + "-" + this.arr[2] + "= " + svaret;
+                              this.ekvation += this.arr[0] + "-" + this.arr[2] + "= " + svaret + ", "
+                              this.arr = []
+                              this.val = "0";
+                              this.history = ""
+                            }else if(this.arr[3]=== "^2"){
+
+                              let nu = this.arr[0];
+                              this.history = this.arr[0] + "^2"
+                              this.arr = []
+                              this.arr.push(nu)
+                              this.arr.push("^2")
+                            }else if(this.arr[3]=== "√"){
+                              let nu = this.arr[0];
+                              let rot =  Math.sqrt(this.arr[2]);
+                              this.result = nu + " - " + rot + " = " + (nu - rot)
+
+                              this.arr = []
+                              this.history = nu - rot
+                              this.val= nu-rot
+
+
+                            }else if(this.arr[2] !== undefined && this.arr[3]!== "√"){
+
+                              this.talet = this.arr[0] - this.arr[2]
+                              this.result = this.arr[0] + "-" + this.arr[2] + "= " + this.talet;
+                              this.ekvation += this.arr[0] + "-" + this.arr[2] + "= " + this.talet + ", "
+                              this.arr = []
+                              this.arr.push(this.talet)
+                              this.arr.push(operator)
+                            }
+                          }else if(this.arr[1] === "x"){
+
+                            this.kommaBool = true;
+                            this.history = this.arr[0] + "x";
+                            this.val = ""
+                            if(this.arr[3]=== "="){
+                              let svaret =  this.arr[0] * this.arr[2];
+                              this.svar += svaret + ", ";
+                              this.result = this.arr[0] + "*" + this.arr[2] + "= " + svaret;
+                              this.ekvation += this.arr[0] + "*" + this.arr[2] + "= " + svaret + ", "
+                              this.arr = []
+                              this.val = "0";
+                              this.history = ""
+                            }else if(this.arr[3]=== "^2"){
+
+                              let nu = this.arr[0];
+                              this.history = this.arr[0] + "^2"
+                              this.arr = []
+                              this.arr.push(nu)
+                              this.arr.push("^2")
+                            }else if(this.arr[3]=== "√"){
+                              let nu = this.arr[0];
+                              let rot =  Math.sqrt(this.arr[2]);
+                              console.log(this.arr)
+                              this.result = nu + " * " + rot + " = " + (nu * rot)
+
+                              this.arr = []
+                              this.history = nu * rot
+                              this.val= nu * rot
+
+
+                            }else if(this.arr[2] !== undefined  && this.arr[3]!== "√"){
+
+                              this.talet = this.arr[0] * this.arr[2];
+                              this.result = this.arr[0] + "*" + this.arr[2] + "= " + this.talet;
+                              this.ekvation += this.arr[0] + "*" + this.arr[2] + "= " + this.talet + ", "
+                              this.arr = [];
+                              this.arr.push(this.talet);
+                              this.arr.push(operator)
+                            }
+                          }else if(this.arr[1] === "/"){
+
+                            this.kommaBool = true;
+                            this.history = this.arr[0] + "/";
+                            this.val = ""
+                            if(this.arr[3]=== "="){
+                              if(this.arr[2]!== 0){
+                                let svaret =  this.arr[0] / this.arr[2]
+                                this.svar += svaret + ", "
+                                this.result = this.arr[0] + "/" + this.arr[2] + "= " + svaret
+                                this.ekvation += this.arr[0] + "/" + this.arr[2] + "= " + svaret
+                                this.arr = []
+                                this.val = "0";
+                                this.history = ""
+                              }else{
+                                this.arr =[]
+                                this.history ="Not possible to divide by 0";
+                                this.val = ""
+                              }
+                            }else if(this.arr[3]=== "^2"){
+
+                              let nu = this.arr[0];
+                              this.history = this.arr[0] + "^2"
+                              this.arr = []
+                              this.arr.push(nu)
+                              this.arr.push("^2")
+                            }else if(this.arr[3]=== "√"){
+                              let nu = this.arr[0];
+                              let rot =  Math.sqrt(this.arr[2]);
+                              console.log(this.arr)
+                              this.result = nu + " / " + rot + " = " + (nu / rot)
+
+                              this.arr = []
+                              this.history = nu / rot
+                              this.val= nu / rot
+
+
+                            }else if(this.arr[2] !== undefined && this.arr[3]!== "√"){
+
+                              if(this.arr[2] !== 0){
+                                this.talet = this.arr[0] / this.arr[2];
+                                this.result = this.arr[0] + "/" + this.arr[2] + "= " + this.talet;
+                                this.ekvation += this.arr[0] + "/" + this.arr[2] + "= " + this.talet + ", "
+                                this.arr = [];
+                                this.arr.push(this.talet);
+                                this.arr.push(operator)
+                              }else{
+                                this.arr =[]
+                                this.history ="Not possible to divide by 0";
+                                this.val = ""
+                              }
+                            }
+                          }else if( this.arr[1] === "^2"){
+
+                            this.kommaBool = true;
+                            this.history = this.arr[0] + "^2";
+                            this.val = ""
+                          }else if(this.arr[1]=== "√"){
+
+
+                            console.log(this.arr)
+                            console.log(this.arr[0])
+                            let nu = Math.sqrt(this.arr[0]);
+                            this.kommaBool = true;
+                              if(this.arr[0] !== 0){
+                                this.history = Math.sqrt(this.arr[0])
+                              }
+
+                            this.val= nu
+
+                            this.arr = []
+
+
+                          }
+                      }
+                  }
+
+                  console.log(this.arr)
+              },
+              isNumber: function(event) {
+                      console.log(this.val)
+
+                        event = (event) ? event : window.event;
+                      var charCode = (event.which) ? event.which : event.keyCode;
+                      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                      event.preventDefault();;
+                    } else {
+                      return true;
+                  }
+                }
+          }
+      })
+    })
+    </script>
+  </head>
+  <body>
+
+  <!--  Kriterier för godkänt: Appen ska innehålla
+input-fält för att mata in ett tal
+presentation av resultatet hittills
+knappar för vanliga räknesätt (+, -, *, /)
+knapp för att rensa resultatet och återställa resultatet till noll (C, Clear eller motsvarande)
+knapp för att räkna ut ett resultat (=)
+appen ska ha en tydlig design (förklara för användaren hur man förväntas använda den, användaren ska inte behöva gissa vad en knapp gör)
+appen ska versionshanteras med Git och vara publicerad på GitHub
+Kriterier för väl godkänt:
+knappar för operationerna x2 och √ (roten ur)
+knappen för roten ur ska bara vara synlig när resultatet är ett positivt tal
+appen håller en historik över tidigare uträkningar
+varje gång man klickar på = ska det uträknade resultatet sparas i en lista, som också ska vara synlig för användaren-->
+
+    <div id="vue">
+      <div class="svar">
+
+        <span>Results</span></br>  <span class="col">{{svar}}<span>
+      </div>
+      <div class="resultat">
+        <span>Latest ekvation</span> </br> <span class="col">{{result}}</span>
+      </div>
+      <div class="content">
+
+
+
+        <div class="historik">
+
+            {{history}}
+        </div>
+        <div class="hej">
+
+            {{lat}}
+        </div>
+        <input type="text" name="" v-bind:placeholder="placeNum"  v-model:value="val" v-on:keypress="isNumber" >
+
+        <table>
+          <tr>
+            <td v-on:click="clear">C</td>
+            <td v-if="arr[0] > 0" v-on:click="calc('√')">√</td>
+            <td  v-on:click="calc('^2')">^2</td>
+            <td  v-on:click="calc('/')">/</td>
+          </tr>
+          <tr>
+            <td v-on:click="number(7)">7</td>
+            <td v-on:click="number(8)">8</td>
+            <td v-on:click="number(9)">9</td>
+            <td  v-on:click="calc('x')">x</td>
+          </tr>
+          <tr>
+            <td v-on:click="number(4)">4</td>
+            <td v-on:click="number(5)">5</td>
+            <td v-on:click="number(6)">6</td>
+            <td  v-on:click="calc('-')">-</td>
+
+          </tr>
+          <tr>
+            <td  v-on:click="number(1)">1</td>
+            <td v-on:click="number(2)">2</td>
+            <td v-on:click="number(3)">3</td>
+            <td v-on:click="calc('+')">+</td>
+
+          </tr>
+          <tr>
+            <td v-on:click="number('.')">.</td>
+            <td v-on:click="number(0)" >0</td>
+            <td colspan="2" v-on:click="calc('=')" >=</td>
+          </tr>
+        </table>
+      </div>
+      <div class="count">
+        <h2>History of your ekvations</h2>
+        <div class="counter">
+          {{ekvation}}
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+  </body>
+</html>
